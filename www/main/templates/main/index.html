@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Responsive Landing Page Template With Flexbox</title>
+
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/main/styles.css">
+	<script type="text/javascript" src="/static/main/jbcm/jquery-1.8.3.min.js"></script>
+	<style>
+		html{
+			scroll-behavior: smooth;
+		}
+
+		/* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            padding-top: 100px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .error-message {
+            color: red;
+        }
+	</style>
+<!--Подключаем js модуль форм-->
+<script type="text/javascript" src="/static/main/jbcm/jquery.jbform.js"></script>
+<!--Подключаем файл стилей-->
+<link rel="stylesheet" type="text/css" href="/static/main/jbcm/jquery.jbform.css"><!--Тема по умолчанию-->
+</head>
+
+<body>
+
+	<header style="position: fixed; background-color: white; padding-bottom: 20px;">
+		<h2><a href="#"><img src="/static/main/img/logo.jpg" alt="" width="200px"></a></h2>
+		<nav>
+			<li><a href="#header" style="color: #000;">Домой</a></li>
+			<li><a href="#Product" style="color: #000;">Продукты</a></li>
+			<li><a href="#About" style="color: #000;">О нас</a></li>
+			<li><a href="#map" style="color: #000;">Контакты</a></li>
+            {% if user %}
+                <li><a href="#" style="color: #000;">Добро пожаловать, {{ user.first_name }}</a></li>
+                <li><a href="{% url 'logout_user' %}" style="color: #000;">Выйти</a></li>
+            {% else %}
+                <li><a href="#" id="authBtn" style="color: #000;">Вход</a></li>
+            {% endif %}
+		</nav>
+	</header>
+
+	<!-- Login/Register Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Вход и Регистрация</h2>
+            <form id="authForm" action="{% url 'login_user' %}" method="post">
+                {% csrf_token %}
+                <label for="username">Почта:</label>
+                <input type="text" id="email" name="email" required><br><br>
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" name="password" required><br><br>
+                <button type="submit">Войти</button>
+				{% if login_errors %}
+					<p class="error-message">{{ login_errors }}</p>
+				{% endif %}
+            </form>
+            <form id="registerForm" action="{% url 'create_user' %}" method="post" style="display:none;">
+                {% csrf_token %}
+                <label for="username">Почта:</label>
+                <input type="text" id="reg_email" name="email" required><br><br>
+                <label for="username">Имя:</label>
+                <input type="text" id="reg_first_name" name="first_name" required><br><br>
+                <label for="username">Фамилия:</label>
+                <input type="text" id="reg_last_name" name="last_name" required><br><br>
+                <label for="password">Пароль:</label>
+                <input type="password" id="reg_password" name="password" required><br><br>
+                <button type="submit">Зарегистрироваться</button>
+				{% if register_errors %}
+					<ul class="error-message">
+						{% for field, errors in register_errors.items %}
+							{% for error in errors %}
+								<li>{{ error }}</li>
+							{% endfor %}
+						{% endfor %}
+					</ul>
+				{% endif %}
+            </form>
+            <button type="button" id="showRegister">Зарегистрироваться</button>
+            <button type="button" id="showLogin" style="display:none;">Войти</button>
+        </div>
+    </div>
+
+	<section class="hero" id="header">
+		<div class="background-image" style="background-image: url(/static/main/img/balloon.jpg);"></div>
+		<h1>Лучшие камеры видеонаблюдения в России</h1>
+		<h3>У нас самые выгодные условия</h3>
+		<a href="#" class="btn my_button">Оставить заявку</a>
+	</section>
+
+
+	<section class="our-work" id="Product">
+		<h3 class="title">Камеры видео наблюдения</h3>
+		<p>У нас самые лучшие камеры видео наблюдения и самая быстроя доставка по всей России</p>
+		<hr>
+
+		<ul class="grid">
+			<li class="small" style="background-image: url(/static/main/img/coast.jpg);"></li>
+			<li class="large" style="background-image: url(/static/main/img/island.jpg);"></li>
+			<li class="large" style="background-image: url(/static/main/img/фывфыв.jpg);"></li>
+			<li class="small" style="background-image: url(/static/main/img/mountain.jpg);"></li>
+		</div>
+	</section>
+	
+
+	<section class="features" id="About">
+		<h3 class="title">Камеры видеонаблюдения</h3>
+		<p>Камеры видеонаблюдения - это специальные устройства, предназначенные для наблюдения и записи происходящих событий в определенном месте. Они могут быть установлены как внутри помещений, так и на улице.</p>
+		<hr>
+
+		<ul class="grid">
+			<li>
+				<i class="fa fa-camera-retro"></i>
+				<h4>Высокое качество съемки</h4>
+				<p>Наши камеры записывают видео в высоком качестве</p>
+			</li>
+			<li>
+				<i class="fa fa-cubes"></i>
+				<h4>Быстрая доставка</h4>
+				<p>Наша доставка самая быстрая в России</p>
+			</li>
+			<li>
+				<i class="fa fa-newspaper-o"></i>
+				<h4>Лицензии</h4>
+				<p>Наши камеры проходят все процедуры перед отправкой</p>
+			</li>
+		</div>
+	</section>
+
+
+	<iframe id="map" src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d188911.3213160979!2d43.79240416999338!3d56.34180386216231!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sru!2sru!4v1717607997501!5m2!1sru!2sru" width="1920" height="900" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+	<footer>
+		<p>Made by <a href="http://tutorialzine.com/" target="_blank">tutorialzine</a>. images courtesy to <a href="http://unsplash.com/" target="_blank">unsplash</a>.</p>
+		<p>No attribution required. you can remove this footer.</p>
+	</footer>
+<script>
+    document.getElementById('authBtn').onclick = function () {
+        document.getElementById('authModal').style.display = "block";
+    }
+
+    document.getElementsByClassName('close')[0].onclick = function () {
+        document.getElementById('authModal').style.display = "none";
+    }
+
+    window.onclick = function (event) {
+        if (event.target == document.getElementById('authModal')) {
+            document.getElementById('authModal').style.display = "none";
+        }
+    }
+
+    document.getElementById('showRegister').onclick = function () {
+        document.getElementById('authForm').style.display = "none";
+        document.getElementById('registerForm').style.display = "block";
+        document.getElementById('showRegister').style.display = "none";
+        document.getElementById('showLogin').style.display = "block";
+    }
+
+    document.getElementById('showLogin').onclick = function () {
+        document.getElementById('registerForm').style.display = "none";
+        document.getElementById('authForm').style.display = "block";
+        document.getElementById('showRegister').style.display = "block";
+        document.getElementById('showLogin').style.display = "none";
+    }
+
+    // Если есть ошибки, показать модальное окно
+    {% if login_errors or register_errors %}
+        document.getElementById('authModal').style.display = "block";
+    {% endif %}
+</script>
+</body>
+
+</html>
